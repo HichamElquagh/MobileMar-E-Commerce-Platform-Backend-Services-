@@ -1,0 +1,61 @@
+services:
+  products:
+    labels:
+      - com.example.description=Products Service
+    build:
+      context: .
+      dockerfile: ./apps/products/Dockerfile
+      target: development
+    command: npm run start:dev products
+    restart: always
+    env_file:
+      - ./apps/products/.env
+    ports:
+      - 3000:3000
+    volumes:
+      - .:/usr/src/app
+    depends_on:
+      - postgres
+    networks:
+      - app-network
+
+  postgres:
+    labels:
+      - com.example.description=PostgreSQL Database
+    image: postgres
+    container_name: local_pgdb
+    restart: always
+    ports:
+      - '5432:5432'
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: productServiceDB
+    volumes:
+      - local_pgdata:/var/lib/postgresql/data
+    networks:
+      - app-network
+
+  pgadmin:
+    labels:
+      - com.example.description=PostgreSQL Admin
+    image: dpage/pgadmin4
+    container_name: pgadmin4_container
+    restart: always
+    ports:
+      - '8888:80'
+    environment:
+      PGADMIN_DEFAULT_EMAIL: issam@admin.com
+      PGADMIN_DEFAULT_PASSWORD: admin
+    volumes:
+      - pgadmin-data:/var/lib/pgadmin
+    networks:
+      - app-network
+
+volumes:
+  local_pgdata:
+  pgadmin-data:
+
+networks:
+  app-network:
+    driver: bridge
