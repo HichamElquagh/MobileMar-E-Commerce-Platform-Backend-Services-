@@ -20,7 +20,9 @@
     "test:e2e": "jest --config ./apps/MobileMar-Microservice/test/jest-e2e.json",
     "prisma:generate:payments": "prisma generate --schema ./apps/payments/prisma/schema.prisma",
     "prisma:migrate:dev:payments": "cross-env $(cat apps/payments/.env | xargs) npx prisma migrate dev --schema ./apps/payments/prisma/schema.prisma",
-    "prisma:seed:payments": "cross-env $(cat apps/payments/.env | xargs) npx prisma db seed"
+    "prisma:seed:payments": "cross-env $(cat apps/payments/.env | xargs) npx prisma db seed",
+    "prisma:generate:orders": "prisma generate --schema ./apps/orders/prisma/schema.prisma",
+    "prisma:migrate:dev:orders": "cross-env $(cat apps/orders/.env | xargs) npx prisma migrate dev --schema ./apps/orders/prisma/schema.prisma"
   },
   "prisma": {
     "seed": "ts-node apps/payments/prisma/seed.ts"

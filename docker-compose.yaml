@@ -59,6 +59,26 @@ services:
     networks:
       - app-network
 
+  orders:
+    labels:
+      - com.example.description=Orders Service
+    build:
+      context: .
+      dockerfile: ./apps/orders/Dockerfile
+      target: development
+    command: npm run start:dev orders
+    restart: always
+    env_file:
+      - ./apps/orders/.env
+    ports:
+      - 3003:3003
+    volumes:
+      - .:/usr/src/app
+    depends_on:
+      - postgres
+    networks:
+      - app-network
+
   mongo:
     labels:
       - com.example.description=MongoDB Database
