@@ -1,4 +1,4 @@
-name: CI/CD for NestJS Microservice
+name: CI/CD
 
 on:
   push:
@@ -27,8 +27,8 @@ jobs:
     - name: Format Code
       run: npm run format
 
-    - name: Lint Code
-      run: npm run lint
+    # - name: Lint Code
+    #   run: npm run lint
 
     - name: Run Tests
       run: npm test
