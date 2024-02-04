@@ -1,18 +1,11 @@
-import {
-  Controller,
-  Post,
-  Req,
-  Body,
-  Param,
-  ParseIntPipe,
-  Get,
-} from '@nestjs/common';
+import { Controller, Post,Req,Body, Param, ParseIntPipe, Get } from '@nestjs/common';
 import { PaymentsService } from './payments.service';
 import { CreatePaymentDto } from './dto/create-payment.dto';
-import { Request } from 'express';
+import{Request} from 'express';
 
 @Controller('Payments')
 export class PaymentsController {
+
   constructor(private readonly paymentsService: PaymentsService) {}
 
   @Post('Stripe/:orderId')
@@ -20,36 +13,49 @@ export class PaymentsController {
     @Param('orderId', ParseIntPipe) orderId: number,
     @Body() paymantdata: CreatePaymentDto,
   ) {
-    const payment = await this.paymentsService.StripeprocessPayment(
-      orderId,
-      paymantdata,
-    );
+    const payment = await this.paymentsService.StripeprocessPayment(orderId, paymantdata);
+    return { payment };
+  }
+  
+@Post('create-checkout-session')
+  async ConfirmStripeprocessPayment(
+    @Req() request: Request,
+  ) {
+    const payment = await this.paymentsService.CheckoutStripe();
+    return { payment };
+  }
 
-    return payment;
+  @Post('payment-status')
+  async checkPaymentStatus(@Body() { sessionId }: { sessionId: string }) {
+    console.log(sessionId);
+    
+    try {
+      const paymentStatus = await this.paymentsService.checkPaymentStatus(sessionId);
+      return { paymentStatus };
+    } catch (error) {
+      console.error('Error retrieving payment status:', error);
+      return { paymentStatus: 'unknown' };
+    }
   }
 
   @Post('Paypal/:orderId')
   async PaypalprocessPayment(
     @Param('orderId', ParseIntPipe) orderId: number,
-    @Body() token: { bearer_token: string },
+
   ) {
-    const payment = await this.paymentsService.PaypalprocessPayment(
-      orderId,
-      token,
-    );
-    return { payment };
+    const payment = await this.paymentsService.PaypalprocessPayment(orderId);
+    return payment;
   }
 
-  @Get('Paypal/Confirm_Payment/:orderId')
+  @Post('Paypal/Confirm_Payment/:orderId')
   async ConfirmPaypalprocessPayment(
     @Param('orderId', ParseIntPipe) orderId: number,
+    @Body('token') token: string,
+    @Body('ttoken') ttoken: string,
     @Req() request: Request,
   ) {
-    const token = { bearer_token: request.query.ttoken as string };
-    const payment = await this.paymentsService.ConfirmPaypalprocessPayment(
-      orderId,
-      token,
-    );
-    return { payment };
+    
+    const payment = await this.paymentsService.ConfirmPaypalprocessPayment(orderId, token , ttoken); 
+    return  payment ;
   }
 }
