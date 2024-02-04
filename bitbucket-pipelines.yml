@@ -1,29 +1,31 @@
-image: atlassian/default-image:3
+image: node:20
+
+definitions:
+  steps:
+    - step: &build-test
+        name: Build and Test
+        caches:
+          - node
+        script:
+          - npm install
+          - npm test
+
+    - step: &deploy-staging
+        name: Deploy to Staging
+        deployment: staging
+        script:
+          - echo "Deploying to Staging environment"
+          
+    - step: &deploy-production
+        name: Deploy to Production
+        deployment: production
+        trigger: manual
+        script:
+          - echo "Deploying to Production environment"
 
 pipelines:
   default:
-    - parallel:
-      - step:
-          name: 'Build and Test'
-          script:
-            - echo "Your build and test goes here..."
-      - step:
-          name: 'Lint'
-          script:
-            - echo "Your linting goes here..."
-      - step:
-          name: 'Security scan'
-          script:
-            - echo "Your security scan goes here..."
+    - step: *build-test
+    - step: *deploy-staging
+    - step: *deploy-production
 
-    - step:
-        name: 'Deployment to Staging'
-        deployment: staging
-        script:
-          - echo "Your deployment to staging script goes here..."
-    - step:
-        name: 'Deployment to Production'
-        deployment: production
-        trigger: 'manual'
-        script:
-          - echo "Your deployment to production script goes here..."
