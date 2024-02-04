@@ -14,8 +14,15 @@ definitions:
         name: Deploy to Staging
         deployment: staging
         script:
-          - echo "Deploying to Staging environment"
-          
+          - pipe: atlassian/aws-ecs-deploy:1.0.0
+            variables:
+              AWS_ACCESS_KEY_ID: $AWS_ACCESS_KEY_ID
+              AWS_SECRET_ACCESS_KEY: $AWS_SECRET_ACCESS_KEY
+              AWS_DEFAULT_REGION: $AWS_DEFAULT_REGION
+              CLUSTER_NAME: 'mobilemar-cluster'
+              SERVICE_NAME: 'mobilemar-service'
+              TASK_DEFINITION: 'taskDefinition.json'
+
     - step: &deploy-production
         name: Deploy to Production
         deployment: production
@@ -27,5 +34,8 @@ pipelines:
   default:
     - step: *build-test
     - step: *deploy-staging
-    - step: *deploy-production
+  branches:
+    prod:
+      - step: *build-test
+      - step: *deploy-production
 
