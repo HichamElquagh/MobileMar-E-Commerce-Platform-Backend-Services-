@@ -9,6 +9,18 @@ definitions:
         script:
           - npm install
           - npm test
+    - step: &push-image-ecr
+        name: Build, tag, and push image to Amazon ECR
+        script:
+          - pipe: atlassian/aws-ecr-push-image:1.1.0
+            variables:
+              AWS_ACCESS_KEY_ID: $AWS_ACCESS_KEY_ID
+              AWS_SECRET_ACCESS_KEY: $AWS_SECRET_ACCESS_KEY
+              AWS_DEFAULT_REGION: $AWS_DEFAULT_REGION
+              IMAGE_NAME: $AWS_ECR_REGISTRY_URL/mobilemar-repository
+              TAGS: 'latest'
+          
+          - echo "Image has been built and pushed to Amazon ECR"
 
     - step: &deploy-staging
         name: Deploy to Staging
@@ -21,7 +33,7 @@ definitions:
               AWS_DEFAULT_REGION: $AWS_DEFAULT_REGION
               CLUSTER_NAME: 'mobilemar-cluster'
               SERVICE_NAME: 'mobilemar-service'
-              TASK_DEFINITION: 'mobilemar-task-definition'
+              TASK_DEFINITION: 'taskDefinition.json'
 
     - step: &deploy-production
         name: Deploy to Production
@@ -33,9 +45,11 @@ definitions:
 pipelines:
   default:
     - step: *build-test
+    - step: *push-image-ecr
     - step: *deploy-staging
   branches:
     prod:
       - step: *build-test
+      - step: *push-image-ecr
       - step: *deploy-production
 
