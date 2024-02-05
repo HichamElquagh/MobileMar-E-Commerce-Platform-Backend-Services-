@@ -74,8 +74,24 @@ services:
       - 3003:3003
     volumes:
       - .:/usr/src/app
-    depends_on:
-      - postgres
+    networks:
+      - app-network
+
+  cart:
+    labels:
+      - com.example.description=Cart Service
+    build:
+      context: .
+      dockerfile: ./apps/cart/Dockerfile
+      target: development
+    command: npm run start:dev cart
+    restart: always
+    env_file:
+      - ./apps/cart/.env
+    ports:
+      - 3004:3004
+    volumes:
+      - .:/usr/src/app
     networks:
       - app-network
 
