@@ -13,7 +13,7 @@ definitions:
         name: Deployment in AWS's ECR
         script: 
           - docker build -t mobilemar -f apps/products/Dockerfile .
-          - docker tag mobilemar:latest $AWS_ECR_REGISTRY_URL 
+          - docker tag mobilemar-repository:latest 324970326540.dkr.ecr.eu-north-1.amazonaws.com/mobilemar-repository:latest
           - pipe: atlassian/aws-ecr-push-image:2.3.0
             variables:
               AWS_ACCESS_KEY_ID: $AWS_ACCESS_KEY_ID
