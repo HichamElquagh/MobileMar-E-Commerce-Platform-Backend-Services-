@@ -23,5 +23,4 @@ export class ProductService {
   async getProducts(): Promise<Product[]> {
     return await this.productModel.find({}).exec();
   }
-
 }

@@ -7,10 +7,10 @@ export class CartItem {
   @Prop()
   quantity: number;
 
-  @Prop({ type: Types.ObjectId, ref: Product.name }) 
+  @Prop({ type: Types.ObjectId, ref: Product.name })
   productId: Product;
 
-  @Prop({ type: Types.ObjectId, ref: 'Cart' }) 
+  @Prop({ type: Types.ObjectId, ref: 'Cart' })
   cartId: Types.ObjectId;
 }
 

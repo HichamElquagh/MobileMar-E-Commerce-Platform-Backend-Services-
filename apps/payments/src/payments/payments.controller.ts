@@ -24,32 +24,47 @@ export class PaymentsController {
       orderId,
       paymantdata,
     );
+    return { payment };
+  }
 
-    return payment;
+  @Post('create-checkout-session')
+  async ConfirmStripeprocessPayment(@Req() request: Request) {
+    const payment = await this.paymentsService.CheckoutStripe();
+    return { payment };
+  }
+
+  @Post('payment-status')
+  async checkPaymentStatus(@Body() { sessionId }: { sessionId: string }) {
+    console.log(sessionId);
+
+    try {
+      const paymentStatus =
+        await this.paymentsService.checkPaymentStatus(sessionId);
+      return { paymentStatus };
+    } catch (error) {
+      console.error('Error retrieving payment status:', error);
+      return { paymentStatus: 'unknown' };
+    }
   }
 
   @Post('Paypal/:orderId')
-  async PaypalprocessPayment(
-    @Param('orderId', ParseIntPipe) orderId: number,
-    @Body() token: { bearer_token: string },
-  ) {
-    const payment = await this.paymentsService.PaypalprocessPayment(
-      orderId,
-      token,
-    );
-    return { payment };
+  async PaypalprocessPayment(@Param('orderId', ParseIntPipe) orderId: number) {
+    const payment = await this.paymentsService.PaypalprocessPayment(orderId);
+    return payment;
   }
 
-  @Get('Paypal/Confirm_Payment/:orderId')
+  @Post('Paypal/Confirm_Payment/:orderId')
   async ConfirmPaypalprocessPayment(
     @Param('orderId', ParseIntPipe) orderId: number,
+    @Body('token') token: string,
+    @Body('ttoken') ttoken: string,
     @Req() request: Request,
   ) {
-    const token = { bearer_token: request.query.ttoken as string };
     const payment = await this.paymentsService.ConfirmPaypalprocessPayment(
       orderId,
       token,
+      ttoken,
     );
-    return { payment };
+    return payment;
   }
 }
