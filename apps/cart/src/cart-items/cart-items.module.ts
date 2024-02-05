@@ -4,7 +4,7 @@ import { CartItemsController } from './cart-items.controller';
 import { MongooseModule } from '@nestjs/mongoose';
 import { CartItem, CartItemSchema } from './entities/cart-item.entity';
 import { Cart, CartSchema } from '../cart/entities/cart.entity';
-import { Product, ProductSchema } from 'src/products/entities/product.entity';
+import { Product, ProductSchema } from '../products/entities/product.entity';
 
 @Module({
   imports: [

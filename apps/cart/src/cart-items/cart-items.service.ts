@@ -6,9 +6,9 @@ import {
 } from '@nestjs/common';
 import { CartItem, CartItemDocument } from './entities/cart-item.entity';
 import { InjectModel } from '@nestjs/mongoose';
-import { Product, ProductDocument } from 'src/products/entities/product.entity';
+import { Product, ProductDocument } from '../products/entities/product.entity';
 import { Model, Types } from 'mongoose';
-import { Cart, CartDocument } from 'src/cart/entities/cart.entity';
+import { Cart, CartDocument } from '../cart/entities/cart.entity';
 
 @Injectable()
 export class CartItemsService {
