@@ -12,15 +12,15 @@ definitions:
     - step: &push-image-ecr
         name: Deployment in AWS's ECR
         script: 
-          - docker build -t mobilemar -f apps/products/Dockerfile .
-          - docker tag mobilemar-repository:latest 324970326540.dkr.ecr.eu-north-1.amazonaws.com/mobilemar-repository:latest
+          - docker build -t mobilemar-repository -f apps/products/Dockerfile .
+          - docker tag mobilemar-repository:latest $AWS_ECR_REGISTRY_URL/mobilemar-repository:latest
           - pipe: atlassian/aws-ecr-push-image:2.3.0
             variables:
               AWS_ACCESS_KEY_ID: $AWS_ACCESS_KEY_ID
               AWS_SECRET_ACCESS_KEY: $AWS_SECRET_ACCESS_KEY
               AWS_DEFAULT_REGION: $AWS_DEFAULT_REGION
-              IMAGE_NAME: $TIMESTAMP$AWS_ECR_REGISTRY_URL/mobilemar-repository
-              TAGS: latest
+              IMAGE_NAME: mobilemar-repository
+              TAGS: 'latest'
 
     - step: &deploy-staging
         name: Deploy to Staging
@@ -33,7 +33,7 @@ definitions:
               AWS_DEFAULT_REGION: $AWS_DEFAULT_REGION
               CLUSTER_NAME: 'mobilemar-cluster'
               SERVICE_NAME: 'mobilemar-service'
-              TASK_DEFINITION: 'taskDefinition.json'
+              TASK_DEFINITION: 'task-definition.json'
 
     - step: &deploy-production
         name: Deploy to Production
