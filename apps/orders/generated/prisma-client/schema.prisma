@@ -1,9 +1,11 @@
 // This is your Prisma schema file,
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
+ 
 
 generator client {
   provider = "prisma-client-js"
   output   = "../generated/prisma-client"
+  binaryTargets = ["native", "linux-musl-openssl-3.0.x"]
 }
 
 datasource db {
@@ -11,6 +13,7 @@ datasource db {
   url       = env("DATABASE_URL")
   directUrl = env("DIRECT_URL")
 }
+
 
 model User {
   id        Int         @id @default(autoincrement())
@@ -44,7 +47,12 @@ model Order {
 }
 
 enum Status {
+  ANNULEE
   TRAITEE
   ENCOURS
   EXPEDIEE
+  RETARD
+  RETOUR
+  EN_ATTENTE
+  LIVREE
 }

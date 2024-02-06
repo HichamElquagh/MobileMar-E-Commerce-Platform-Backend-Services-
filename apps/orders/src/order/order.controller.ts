@@ -6,6 +6,7 @@ import {
   Patch,
   Param,
   Delete,
+  Query,
 } from '@nestjs/common';
 import { OrderService } from './order.service';
 import { CreateOrderDto } from './dto/create-order.dto';
@@ -20,9 +21,13 @@ export class OrderController {
     return this.orderService.create(createOrderDto);
   }
 
-  @Get()
-  findAll() {
-    return this.orderService.findAll();
+  @Get('')
+  async findAll(@Query('status') status?: string) {
+    if (status) {
+      return this.orderService.findAll({ status });
+    } else {
+      return this.orderService.findAll({ NOT: { status: "LIVREE" } });
+    }
   }
 
   @Get(':id')

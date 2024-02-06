@@ -142,9 +142,14 @@ exports.Prisma.QueryMode = {
   insensitive: 'insensitive'
 };
 exports.Status = exports.$Enums.Status = {
+  ANNULEE: 'ANNULEE',
   TRAITEE: 'TRAITEE',
   ENCOURS: 'ENCOURS',
-  EXPEDIEE: 'EXPEDIEE'
+  EXPEDIEE: 'EXPEDIEE',
+  RETARD: 'RETARD',
+  RETOUR: 'RETOUR',
+  EN_ATTENTE: 'EN_ATTENTE',
+  LIVREE: 'LIVREE'
 };
 
 exports.Prisma.ModelName = {

@@ -33,8 +33,9 @@ export class OrderService {
     return { message: 'created', createdOrderitem };
   }
 
-  async findAll() {
+  async findAll(where = {}) {
     return this.databaseservice.order.findMany({
+      where,
       include: {
         orderitem: {
           include: {
